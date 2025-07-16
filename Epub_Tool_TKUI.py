@@ -1,4 +1,5 @@
 import tkinter as tk
+from tkinterdnd2 import TkinterDnD, DND_FILES
 
 # from tkinter.filedialog import askopenfiles
 from tkinter.font import Font
@@ -14,7 +15,7 @@ import threading
 import subprocess
 import webbrowser
 
-root = tk.Tk()
+root = TkinterDnD.Tk()
 style = ttk.Style()
 
 root.title("Epub Tool")
@@ -57,7 +58,7 @@ intro_label.pack(side=tk.TOP)
 
 
 def open_link(event):
-    webbrowser.open_new("https://github.com/cnwxi/epub_tool")
+    webbrowser.open_new("https://github.com/zi-ha/epub_tool")
 
 
 style.configure(
@@ -199,6 +200,15 @@ delete_all_button.pack(side=tk.LEFT, padx=5)
 listbox_frame = ttk.Frame(root)
 listbox_frame.pack(fill=tk.BOTH, expand=True, padx=10, pady=5)
 
+# 添加拖拽提示标签
+drag_tip_label = ttk.Label(
+    listbox_frame,
+    text="💡 提示：可以直接拖拽EPUB文件到下方列表中",
+    font=("TkDefaultFont", 9),
+    foreground="gray"
+)
+drag_tip_label.grid(row=0, column=0, columnspan=2, sticky="w", padx=5, pady=(0, 5))
+
 file_list = ttk.Treeview(
     listbox_frame,
     selectmode="extended",
@@ -332,6 +342,78 @@ class Tooltip:
 
 
 Tooltip(file_list)
+
+
+# 拖拽功能实现
+def on_drop_enter(event):
+    """当拖拽进入控件时触发"""
+    event.widget.focus_force()
+    # 添加视觉反馈 - 改变背景色
+    if hasattr(event.widget, 'configure'):
+        try:
+            event.widget.configure(relief="solid", highlightbackground="lightblue", highlightthickness=2)
+        except:
+            pass
+    return event.action
+
+
+def on_drop_leave(event):
+    """当拖拽离开控件时触发"""
+    # 恢复原始外观
+    if hasattr(event.widget, 'configure'):
+        try:
+            event.widget.configure(relief="flat", highlightthickness=0)
+        except:
+            pass
+    return event.action
+
+
+def on_drop(event):
+    """当文件被拖拽到控件时触发"""
+    # 恢复原始外观
+    if hasattr(event.widget, 'configure'):
+        try:
+            event.widget.configure(relief="flat", highlightthickness=0)
+        except:
+            pass
+    
+    if event.data:
+        # 解析拖拽的文件列表
+        files = file_list.tk.splitlist(event.data)
+        tmp_files = []
+        invalid_files = []
+        
+        for file_path in files:
+            if os.path.exists(file_path):
+                if file_path.lower().endswith('.epub'):
+                    tmp_files.append(os.path.normpath(file_path))
+                else:
+                    invalid_files.append(os.path.basename(file_path))
+        
+        # 处理结果
+        if tmp_files:
+            # 使用现有的文件存储和显示函数
+            store_file(tmp_files)
+            display_added_file(tmp_files_dic.keys())
+        elif invalid_files:
+            messagebox.showwarning("格式错误", f"拖拽的文件不是EPUB格式\n请拖拽 .epub 文件")
+        else:
+            messagebox.showwarning("文件不存在", "拖拽的文件不存在或无法访问")
+    
+    return event.action
+
+
+# 注册拖拽目标和绑定事件
+file_list.drop_target_register(DND_FILES)
+file_list.dnd_bind('<<DropEnter>>', on_drop_enter)
+file_list.dnd_bind('<<DropLeave>>', on_drop_leave)
+file_list.dnd_bind('<<Drop>>', on_drop)
+
+# 同时为整个listbox_frame也注册拖拽支持，这样拖拽到空白区域也能工作
+listbox_frame.drop_target_register(DND_FILES)
+listbox_frame.dnd_bind('<<DropEnter>>', on_drop_enter)
+listbox_frame.dnd_bind('<<DropLeave>>', on_drop_leave)
+listbox_frame.dnd_bind('<<Drop>>', on_drop)
 
 
 # file_list.bind("<Motion>", on_treeview_motion)
