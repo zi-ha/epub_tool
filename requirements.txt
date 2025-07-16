@@ -4,3 +4,13 @@ fonttools
 tinycss2
 tqdm
 pillow
+tkinterdnd2
+zipfile
+xml.etree.ElementTree
+urllib.parse
+fontTools
+Pillow
+argparse
+subprocess
+threading
+webbrowser
