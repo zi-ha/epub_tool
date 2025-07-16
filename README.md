@@ -118,7 +118,13 @@ Epub Tool->ET->E-Book Thor->📖🔨-><img src="./img/icon.ico" alt="icon" style
 >（注：同样会在可执行程序所在路径生成日志文件`log.txt`，每次启动程序会覆盖写入该文件，无需担心此文件过分占用存储空间，mac文件写入位置为`/Applications/Epub_Tool_TKUI.app/Contents/MacOS/log.txt`，win文件写入位置为`Epub_Tool_TKUI.exe所在目录`）<br>
 
 
-> （Mac安装后运行若提示无法验证安全性，请参考[Apple 无法检查 App 是否包含恶意软件（来自Apple官网Mac使用手册）](https://support.apple.com/zh-cn/guide/mac-help/mchleab3a043/mac)，进入系统设置-隐私与安全性-安全性-点击“仍要打开”；Windows若报告病毒文件请忽略警告，允许文件保留本地。）
+> （Mac安装后运行若提示无法验证安全性，请参考[Apple 无法检查 App 是否包含恶意软件（来自Apple官网Mac使用手册）](https://support.apple.com/zh-cn/guide/mac-help/mchleab3a043/mac)，进入系统设置-隐私与安全性-安全性-点击"仍要打开"；Windows若报告病毒文件请忽略警告，允许文件保留本地。）
+
+**新功能：拖拽支持** 🎉
+- 现在支持直接从文件管理器拖拽EPUB文件到程序界面中
+- 可以同时拖拽多个EPUB文件，程序会自动识别并添加
+- 拖拽时会有视觉反馈提示，让操作更直观
+- 既可以使用传统的"添加文件"按钮，也可以直接拖拽，使用更便捷
 
 ![操作演示](./img/how_to_use.gif)
 
